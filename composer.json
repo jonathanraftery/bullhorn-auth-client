@@ -1,0 +1,13 @@
+{
+    "name": "jonathanraftery/bullhorn-client",
+    "authors": [
+        {
+            "name": "Jonathan Raftery",
+            "email": "jonathan@jonathanraftery.com"
+        }
+    ],
+    "require": {
+        "league/oauth2-client": "^2.3",
+        "guzzlehttp/guzzle": "~6.0"
+    }
+}
