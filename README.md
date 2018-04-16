@@ -1,7 +1,7 @@
-#Bullhorn Auth Client
+# Bullhorn Auth Client
 This package provides a simple way to automate Bullhorn REST API logins.
 
-##Usage
+## Usage
 ```php
 use jonathanraftery\Bullhorn\REST\Authentication\Client as BullhornAuthClient;
 
