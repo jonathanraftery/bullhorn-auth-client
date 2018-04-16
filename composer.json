@@ -1,6 +1,9 @@
 {
-    "name": "jonathanraftery/bullhorn-client",
-    "description": "Simple authorization client for the Bullhorn REST API",
+    "name": "jonathanraftery/bullhorn-auth-client",
+    "description": "Simple authorization client to create Bullhorn REST API sessions",
+    "keywords": [
+        "bullhorn", "authentication", "rest", "api"
+    ],
     "license": "MIT",
     "authors": [
         {
