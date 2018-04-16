@@ -1,13 +1,27 @@
 {
     "name": "jonathanraftery/bullhorn-client",
+    "description": "Simple authorization client for the Bullhorn REST API",
+    "license": "MIT",
     "authors": [
         {
             "name": "Jonathan Raftery",
             "email": "jonathan@jonathanraftery.com"
         }
     ],
+    "minimum-stability": "stable",
     "require": {
         "league/oauth2-client": "^2.3",
         "guzzlehttp/guzzle": "~6.0"
+    },
+    "autoload": {
+        "classmap": [
+            "src/"
+        ],
+        "psr-4": {
+            "jonathanraftery\\Bullhorn\\REST\\Authentication\\Client\\": "src/Client.php"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
     }
 }
