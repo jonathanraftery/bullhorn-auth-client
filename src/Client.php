@@ -2,7 +2,6 @@
 
 namespace jonathanraftery\Bullhorn\REST\Authentication;
 
-require_once __DIR__.'/../vendor/autoload.php';
 use \League\OAuth2\Client\Provider\GenericProvider as OAuth2Provider;
 use \GuzzleHttp\Client as HttpClient;
 
