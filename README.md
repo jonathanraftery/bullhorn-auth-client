@@ -6,7 +6,7 @@ This package provides a simple way to automate Bullhorn REST API logins.
 use jonathanraftery\Bullhorn\REST\Authentication\Client as BullhornAuthClient;
 
 $client = new BullhornAuthClient(
-    'client_id",
+    'client_id',
     'client_secret',
     'bullhorn_username',
     'bullhorn_password'
