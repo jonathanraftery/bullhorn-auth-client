@@ -6,7 +6,7 @@ use jonathanraftery\Bullhorn\REST\Authentication\Client as Client;
 final class ClientTest extends TestCase
 {
     /**
-     * @dataProvider credentialsProvider
+     * @dataProvider validCredentialsProvider
      */
     function testCreatesSessionForValidCredentials(
         $clientId,
@@ -24,14 +24,72 @@ final class ClientTest extends TestCase
         $this->assertTrue(!empty($session->BhRestToken));
     }
 
-    function credentialsProvider()
+
+    /**
+     * @dataProvider invalidClientIdCredentialsProvider
+     */
+    function testThrowsExceptionOnInvalidClientId(
+        $clientId,
+        $clientSecret,
+        $username,
+        $password
+    ) {
+        $this->expectException(InvalidArgumentException::class);
+        $client = new Client(
+            $clientId,
+            $clientSecret,
+            $username,
+            $password
+        );
+        $client->createSession();
+    }
+
+    /**
+     * @dataProvider invalidUsernameCredentialsProvider
+     */
+    function testThrowsExceptionOnInvalidUsername(
+        $clientId,
+        $clientSecret,
+        $username,
+        $password
+    ) {
+        $this->expectException(InvalidArgumentException::class);
+        $client = new Client(
+            $clientId,
+            $clientSecret,
+            $username,
+            $password
+        );
+        $client->createSession();
+    }
+
+    /**
+     * @dataProvider invalidPasswordCredentialsProvider
+     */
+    function testThrowsExceptionOnInvalidPassword(
+        $clientId,
+        $clientSecret,
+        $username,
+        $password
+    ) {
+        $this->expectException(InvalidArgumentException::class);
+        $client = new Client(
+            $clientId,
+            $clientSecret,
+            $username,
+            $password
+        );
+        $client->createSession();
+    }
+
+    function validCredentialsProvider()
     {
         $credentialsFileName = __DIR__.'/data/client-credentials.json';
         $credentialsFile = fopen($credentialsFileName, 'r');
         $credentialsJson = fread($credentialsFile, filesize($credentialsFileName));
         $credentials = json_decode($credentialsJson);
         return [
-            'testing valid credentials' => [
+            'valid credentials' => [
                 $credentials->clientId,
                 $credentials->clientSecret,
                 $credentials->username,
@@ -40,27 +98,51 @@ final class ClientTest extends TestCase
         ];
     }
 
-    function testThrowsExceptionOnInvalidClientId()
+    function invalidClientIdCredentialsProvider()
     {
-        $this->expectException(InvalidArgumentException::class);
-        $badClient = new Client(
-            'testing_invalid_client_id',
-            '',
-            '',
-            ''
-        );
-        $badClient->createSession();
+        $credentialsFileName = __DIR__.'/data/client-credentials.json';
+        $credentialsFile = fopen($credentialsFileName, 'r');
+        $credentialsJson = fread($credentialsFile, filesize($credentialsFileName));
+        $credentials = json_decode($credentialsJson);
+        return [
+            'invalid credentials (client ID)' => [
+                'testing_invalid_client_id',
+                $credentials->clientSecret,
+                $credentials->username,
+                $credentials->password
+            ]
+        ];
     }
 
-    function testThrowsExceptionOnInvalidUsername()
+    function invalidUsernameCredentialsProvider()
     {
-        $this->expectException(InvalidArgumentException::class);
-        $badClient = new Client(
-            '',
-            '',
-            '',
-            ''
-        );
-        $badClient->createSession();
+        $credentialsFileName = __DIR__.'/data/client-credentials.json';
+        $credentialsFile = fopen($credentialsFileName, 'r');
+        $credentialsJson = fread($credentialsFile, filesize($credentialsFileName));
+        $credentials = json_decode($credentialsJson);
+        return [
+            'invalid credentials (username)' => [
+                $credentials->clientId,
+                $credentials->clientSecret,
+                'testing_invalid_username',
+                $credentials->password
+            ]
+        ];
+    }
+
+    function invalidPasswordCredentialsProvider()
+    {
+        $credentialsFileName = __DIR__.'/data/client-credentials.json';
+        $credentialsFile = fopen($credentialsFileName, 'r');
+        $credentialsJson = fread($credentialsFile, filesize($credentialsFileName));
+        $credentials = json_decode($credentialsJson);
+        return [
+            'invalid credentials (password)' => [
+                $credentials->clientId,
+                $credentials->clientSecret,
+                $credentials->username,
+                'testing_invalid_password'
+            ]
+        ];
     }
 }
