@@ -22,7 +22,7 @@ class Client
         $clientSecret,
         $username,
         $password
-    ){
+    ) {
         $this->username = $username;
         $this->password = $password;
         $this->accessToken = NULL;
