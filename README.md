@@ -1,6 +1,11 @@
 # Bullhorn Auth Client
 This package provides a simple way to automate Bullhorn REST API logins.
 
+## Installation
+``` bash
+$ composer require jonathanraftery/bullhorn-auth-client
+```
+
 ## Usage
 ```php
 use jonathanraftery\Bullhorn\REST\Authentication\Client as BullhornAuthClient;
