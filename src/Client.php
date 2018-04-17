@@ -53,8 +53,13 @@ class Client
         );
         $response = $this->authProvider->getResponse($loginRequest);
 
-        $this->accessTokenUsed = true;
-        return json_decode($response->getBody());
+        if ($response->getStatusCode() == 200) {
+            $this->accessTokenUsed = true;
+            return json_decode($response->getBody());
+        }
+        else {
+
+        }
     }
 
     private function getAccessToken()
@@ -96,23 +101,32 @@ class Client
     {
         $authCode = '';
         while ('' === $authCode) {
-            $authUrl = $this->authProvider->getAuthorizationUrl();
-            $request = $authUrl.'&'.http_build_query([
+            $authRequest = $this->authProvider->getAuthorizationUrl([
                 'response_type' => 'code',
                 'action'=> 'Login',
                 'username' => $this->username,
                 'password' => $this->password
             ]);
             $response = $this->makeHttpRequest(
-                $request,
+                $authRequest,
                 ['allow_redirects' => false]
             );
+            $responseBody = $response->getBody()->getContents();
+            $this->checkAuthorizationErrors($responseBody);
 
             $locationHeader = $response->getHeaders()['Location'][0];
             $authCode = $this->parseAuthorizationCodeFromUrl($locationHeader);
         }
 
         return $authCode;
+    }
+
+    private function checkAuthorizationErrors($responseBody)
+    {
+        if (FALSE !== strpos($responseBody, 'Invalid Client Id'))
+            throw new \InvalidArgumentException("Invalid client ID");
+        elseif (FALSE !== strpos($responseBody, '<p class="error">'))
+            throw new \InvalidArgumentException("Invalid account credentials");
     }
 
     private function parseAuthorizationCodeFromUrl($url)
