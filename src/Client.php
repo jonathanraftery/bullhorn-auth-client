@@ -15,7 +15,6 @@ class Client
 
     private $clientId;
     private $authProvider;
-    private $restSession;
     private $dataStore;
 
     public function __construct($clientId, $clientSecret, $dataStore = null)
@@ -32,13 +31,22 @@ class Client
     }
 
     public function getRestToken()
-    { return $this->dataStore->get('BhRestToken'); }
+    { return $this->dataStore->get($this->getRestTokenKey()); }
 
     public function getRestUrl()
-    { return $this->restSession->restUrl; }
+    { return $this->dataStore->get($this->getRestUrlKey()); }
+
+    public function getRefreshToken()
+    { return $this->dataStore->get($this->getRefreshTokenKey()); }
+
+    private function getRestTokenKey()
+    { return $this->clientId.'-restToken'; }
+
+    private function getRestUrlKey()
+    { return $this->clientId.'-restUrl'; }
 
     private function getRefreshTokenKey()
-    { return $this->clientId.'-refresh'; }
+    { return $this->clientId.'-refreshToken'; }
 
     private function storeData($name, $value)
     { $this->dataStore->store($name, $value); }
@@ -50,11 +58,11 @@ class Client
             $password
         );
         $accessToken = $this->createAccessToken($authCode);
-
-        $this->restSession = $this->createSession(
+        $session = $this->createSession(
             $accessToken,
             $options
         );
+        $this->storeSession($session);
     }
 
     public function refreshSession($options = [])
@@ -63,10 +71,11 @@ class Client
             $this->getRefreshTokenKey()
         );
         $accessToken = $this->refreshAccessToken($refreshToken);
-        $this->restSession = $this->createSession(
+        $session = $this->createSession(
             $accessToken,
             $options
         );
+        $this->storeSession($session);
     }
 
     public function sessionIsValid()
@@ -81,7 +90,7 @@ class Client
     {
         $response = $this->doRestLogin($accessToken->getToken(), $options);
         if ($response->getStatusCode() == 200) {
-            $this->storeToken(
+            $this->storeData(
                 $this->getRefreshTokenKey(),
                 $accessToken->getRefreshToken()
             );
@@ -90,6 +99,18 @@ class Client
         else {
 
         }
+    }
+
+    private function storeSession($session)
+    {
+        $this->storeData(
+            $this->getRestTokenKey(),
+            $session->BhRestToken
+        );
+        $this->storeData(
+            $this->getRestUrlKey(),
+            $session->restUrl
+        );
     }
 
     private function doRestLogin($accessToken, $options)
