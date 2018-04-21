@@ -21,7 +21,7 @@
             "src/"
         ],
         "psr-4": {
-            "jonathanraftery\\Bullhorn\\REST\\Authentication\\Client\\": "src/Client.php"
+            "jonathanraftery\\Bullhorn\\REST\\Authentication\\": "src/"
         }
     },
     "require-dev": {
