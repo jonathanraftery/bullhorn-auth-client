@@ -8,7 +8,7 @@ $ composer require jonathanraftery/bullhorn-auth-client
 
 ## Usage
 ```php
-use jonathanraftery\Bullhorn\REST\Authentication\Client as BullhornAuthClient;
+use jonathanraftery\Bullhorn\Rest\Authentication\Client as BullhornAuthClient;
 
 $client = new BullhornAuthClient(
     'client_id',
