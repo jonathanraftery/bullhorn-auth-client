@@ -2,17 +2,8 @@
 
 namespace jonathanraftery\Bullhorn;
 
-class DataStore
+Interface DataStore
 {
-    private $tokens;
-
-    public function store($key, $value)
-    {
-        $this->tokens[$key] = $value;
-    }
-
-    public function get($key)
-    {
-        return $this->tokens[$key];
-    }
+    public function store($key, $value);
+    public function get($key);
 }
