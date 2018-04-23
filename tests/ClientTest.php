@@ -5,9 +5,34 @@ namespace jonathanraftery\Bullhorn\Rest\Authentication;
 final class ClientTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @dataProvider credentialsProvider
+     * @group new
      */
-    function testCreatesSessionForValidCredentials($credentials)
+    function testCreatesSessionForValidCredentials()
+    {
+        $credentialsFileName = __DIR__.'/data/client-credentials.json';
+        $credentialsFile = fopen($credentialsFileName, 'r');
+        $credentialsJson = fread($credentialsFile, filesize($credentialsFileName));
+        $credentials = json_decode($credentialsJson);
+
+        $client = new Client(
+            $credentials->clientId,
+            $credentials->clientSecret
+        );
+        $client->initiateSession(
+            $credentials->username,
+            $credentials->password,
+            ['ttl' => 1]
+        );
+        $this->assertTrue($client->sessionIsValid());
+        return $client;
+    }
+
+    /**
+     * @dataProvider credentialsProvider
+     * @depends testCreatesSessionForValidCredentials
+     * @group new
+     */
+    function testUsesSessionFromDataStoreUponConstruction($credentials, $firstClient)
     {
         $client = new Client(
             $credentials['clientId'],
@@ -18,7 +43,7 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
             $credentials['password'],
             ['ttl' => 1]
         );
-        $this->assertTrue($client->sessionIsValid());
+        $this->assertEquals($client->getRestToken(), $firstClient->getRestToken());
     }
 
     /**
