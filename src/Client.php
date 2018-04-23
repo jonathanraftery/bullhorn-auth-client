@@ -5,7 +5,7 @@ namespace jonathanraftery\Bullhorn\Rest\Authentication;
 use GuzzleHttp\Client as HttpClient;
 use League\OAuth2\Client\Provider\GenericProvider as OAuth2Provider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use jonathanraftery\Bullhorn\DataStore;
+use jonathanraftery\Bullhorn\JsonDataStore;
 
 class Client
 {
@@ -20,7 +20,7 @@ class Client
     public function __construct($clientId, $clientSecret, $dataStore = null)
     { 
         $this->clientId = $clientId;
-        $this->dataStore = $dataStore ?: new DataStore();
+        $this->dataStore = $dataStore ?: new JsonDataStore();
         $this->authProvider = new OAuth2Provider([
             'clientId' => $clientId,
             'clientSecret' => $clientSecret,
@@ -53,6 +53,10 @@ class Client
 
     public function initiateSession($username, $password, $options = [])
     {
+        $restToken = $this->getRestToken();
+        if (isset($restToken))
+            return;
+
         $authCode = $this->getAuthorizationCode(
             $username,
             $password
