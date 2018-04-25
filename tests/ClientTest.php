@@ -1,6 +1,7 @@
 <?php
 
 namespace jonathanraftery\Bullhorn\Rest\Authentication;
+use jonathanraftery\Bullhorn\MemoryDataStore;
 
 final class ClientTest extends \PHPUnit\Framework\TestCase
 {
@@ -55,7 +56,8 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
         $credentials['clientId'] = 'testing_invalid_client_id';
         $client = new Client(
             $credentials['clientId'],
-            $credentials['clientSecret']
+            $credentials['clientSecret'],
+            new MemoryDataStore()
         );
         $client->initiateSession(
             $credentials['username'],
@@ -73,7 +75,8 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
         $credentials['clientSecret'] = 'testing_invalid_client_secret';
         $client = new Client(
             $credentials['clientId'],
-            $credentials['clientSecret']
+            $credentials['clientSecret'],
+            new MemoryDataStore()
         );
         $client->initiateSession(
             $credentials['username'],
@@ -91,7 +94,8 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
         $credentials['username'] = 'testing_invalid_username';
         $client = new Client(
             $credentials['clientId'],
-            $credentials['clientSecret']
+            $credentials['clientSecret'],
+            new MemoryDataStore()
         );
         $client->initiateSession(
             $credentials['username'],
@@ -109,25 +113,8 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
         $credentials['password'] = 'testing_invalid_password';
         $client = new Client(
             $credentials['clientId'],
-            $credentials['clientSecret']
-        );
-        $client->initiateSession(
-            $credentials['username'],
-            $credentials['password'],
-            ['ttl' => 1]
-        );
-    }
-
-    /**
-     * @dataProvider credentialsProvider
-     */
-    function testTimeToLiveParameterSetsTimeToLive($credentials)
-    {
-        $this->expectException(AuthorizationException::class);
-        $credentials['password'] = 'testing_invalid_password';
-        $client = new Client(
-            $credentials['clientId'],
-            $credentials['clientSecret']
+            $credentials['clientSecret'],
+            new MemoryDataStore()
         );
         $client->initiateSession(
             $credentials['username'],

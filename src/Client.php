@@ -74,6 +74,9 @@ class Client
         $refreshToken = $this->dataStore->get(
             $this->getRefreshTokenKey()
         );
+        if (!isset($refreshToken))
+            return;
+
         $accessToken = $this->refreshAccessToken($refreshToken);
         $session = $this->createSession(
             $accessToken,
@@ -169,7 +172,6 @@ class Client
 
     private function authorize($username, $password, $maxAttempts = 5)
     {
-        $authCode = new AuthorizationCode();
         $attempts = 0;
         do {
             $authCode->setCode(
@@ -179,7 +181,7 @@ class Client
             ++$attemps;
             if ($attempts > $maxAttempts)
                 throw new AuthorizationException();
-        } while (!$authCode->isValid());
+        } while (!isset($authCode));
     }
 
     private function getAuthorizationCode($username, $password)
@@ -212,8 +214,12 @@ class Client
     private function parseAuthorizationCodeFromUrl($url)
     {
         $temp = preg_split("/code=/", $url);
-        $temp = preg_split("/&/", $temp[1]);
-        return urldecode($temp[0]);
+        if (count($temp) > 1) {
+            $temp = preg_split("/&/", $temp[1]);
+            return urldecode($temp[0]);
+        }
+        else
+            return '';
     }
 
     private function makeHttpRequest($request, $options = [])

@@ -8,7 +8,6 @@ class JsonDataStore implements DataStore
 
     public function store($key, $value)
     {
-        echo "\nstoring $key -> $value\n";
         $data = $this->readDataFile();
         $data->tokens->$key = $value;
         $this->saveData($data);
@@ -17,7 +16,10 @@ class JsonDataStore implements DataStore
     public function get($key)
     {
         $data = $this->readDataFile();
-        return $data->tokens->$key;
+        if (isset($data->tokens->$key))
+            return $data->tokens->$key;
+        else
+            return null;
     }
 
     private function readDataFile()
