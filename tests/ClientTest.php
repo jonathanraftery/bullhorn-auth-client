@@ -31,7 +31,6 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider credentialsProvider
      * @depends testCreatesSessionForValidCredentials
-     * @group new
      */
     function testUsesSessionFromDataStoreUponConstruction($credentials, $firstClient)
     {
@@ -141,6 +140,23 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
         $client->refreshSession();
         $secondToken = $client->getRestToken();
         $this->assertNotEquals($initialToken, $secondToken);
+    }
+
+    /**
+     * @dataProvider credentialsProvider
+     */
+    function testThrowsExceptionOnInvalidRefreshToken($credentials)
+    {
+        $this->expectException(Exception\InvalidRefreshTokenException::class);
+        $dataStore = new MemoryDataStore();
+        $client = new Client(
+            $credentials['clientId'],
+            $credentials['clientSecret'],
+            $dataStore
+        );
+        $dataKey = $credentials['clientId'] . '-refreshToken';
+        $dataStore->store($dataKey, 'invalid-refresh-token');
+        $client->refreshSession();
     }
 
     function credentialsProvider()
