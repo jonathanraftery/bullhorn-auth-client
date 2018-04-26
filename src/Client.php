@@ -5,6 +5,7 @@ namespace jonathanraftery\Bullhorn\Rest\Authentication;
 use GuzzleHttp\Client as HttpClient;
 use League\OAuth2\Client\Provider\GenericProvider as OAuth2Provider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use jonathanraftery\Bullhorn\Rest\authentication\Exception\InvalidRefreshTokenException;
 use jonathanraftery\Bullhorn\JsonDataStore;
 
 class Client
@@ -75,7 +76,7 @@ class Client
             $this->getRefreshTokenKey()
         );
         if (!isset($refreshToken))
-            return;
+            throw new Exception\InvalidRefreshTokenException('attempted session refresh with invalid refresh token');
 
         $accessToken = $this->refreshAccessToken($refreshToken);
         $session = $this->createSession(
@@ -166,7 +167,7 @@ class Client
                 ['refresh_token' => $refreshToken]
             );
         } catch (IdentityProviderException $e) {
-            throw new AuthorizationException('Identity provider exception');
+            throw new Exception\InvalidRefreshTokenException('attempted session refresh with invalid refresh token');
         }
     }
 
