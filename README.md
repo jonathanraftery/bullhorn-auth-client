@@ -12,19 +12,18 @@ use jonathanraftery\Bullhorn\Rest\Authentication\Client as BullhornAuthClient;
 
 $client = new BullhornAuthClient(
     'client_id',
-    'client_secret',
+    'client_secret'
+);
+
+$client->initiateSession(
     'bullhorn_username',
     'bullhorn_password'
 );
-
-$session = $client->createSession();
-$restToken = $session->BhRestToken;
-$restUrl = $session->restUrl;
+$restToken = $session->getRestToken();
+$restUrl = $session->getRestUrl();
 
 // make Bullhorn calls
 
-// once  your session expires, simply create a new one
-$session = $client->createSession();
-$restToken = $session->BhRestToken;
-$restUrl = $session->restUrl;
+// once  your session expires, refresh with the stored refresh token
+$client->refreshSession();
 ```
