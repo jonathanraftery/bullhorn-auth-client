@@ -54,10 +54,6 @@ class Client
 
     public function initiateSession($username, $password, $options = [])
     {
-        $restToken = $this->getRestToken();
-        if (isset($restToken))
-            return;
-
         $authCode = $this->getAuthorizationCode(
             $username,
             $password
