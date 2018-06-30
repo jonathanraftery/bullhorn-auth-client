@@ -21,7 +21,7 @@ class Client
     public function __construct($clientId, $clientSecret, $dataStore = null)
     { 
         $this->clientId = $clientId;
-        $this->dataStore = $dataStore ? $dataStore : new JsonDataStore();
+        $this->dataStore = $dataStore  ? $dataStore : new JsonDataStore();
         $this->authProvider = new OAuth2Provider([
             'clientId' => $clientId,
             'clientSecret' => $clientSecret,
