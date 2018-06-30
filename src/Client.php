@@ -7,6 +7,7 @@ use League\OAuth2\Client\Provider\GenericProvider as OAuth2Provider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use jonathanraftery\Bullhorn\Rest\authentication\Exception\InvalidRefreshTokenException;
 use jonathanraftery\Bullhorn\JsonDataStore;
+use jonathanraftery\Bullhorn\WordpressDataStore;
 
 class Client
 {
@@ -18,10 +19,10 @@ class Client
     private $authProvider;
     private $dataStore;
 
-    public function __construct($clientId, $clientSecret, $dataStore = null)
+    public function __construct($clientId, $clientSecret, $dataStoreType = "json")
     { 
         $this->clientId = $clientId;
-        $this->dataStore = $dataStore ? $dataStore : new JsonDataStore();
+        $this->dataStore = ($dataStoreType == "wp") ? new WordpressDataStore() : new JsonDataStore();
         $this->authProvider = new OAuth2Provider([
             'clientId' => $clientId,
             'clientSecret' => $clientSecret,
