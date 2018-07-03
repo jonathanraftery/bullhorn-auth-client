@@ -4,11 +4,14 @@ namespace jonathanraftery\Bullhorn;
 
 class WordpressDataStore implements DataStore
 {	
+	const BH_OPTION_NAME = "bullhorn-datastore";
+	
     public function store($key, $value)
     {
         $data = $this->readDataFile();
         $data->tokens->$key = $value;
-        $this->saveData($data);
+        
+        update_option( self::BH_OPTION_NAME, json_encode($data) );
     }
 
     public function get($key)
@@ -22,7 +25,7 @@ class WordpressDataStore implements DataStore
 
     private function readDataFile()
     {
-	    $data = get_transient("bullhorn-datastore");
+	    $data = get_option( self::BH_OPTION_NAME );
 	    
         if ($data)
             return json_decode($data);
@@ -30,8 +33,4 @@ class WordpressDataStore implements DataStore
             return json_decode('{"tokens":{}}');
     }
 
-    private function saveData($newData)
-    {
-        set_transient("bullhorn-datastore", json_encode($newData), HOUR_IN_SECONDS);
-    }
 }
