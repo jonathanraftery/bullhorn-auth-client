@@ -18,6 +18,9 @@ class Client
     private $authProvider;
     private $dataStore;
 
+    private $lastResponseBody;
+    private $lastResponseHeaders;
+
     public function __construct($clientId, $clientSecret, $dataStore = null)
     { 
         $this->clientId = $clientId;
@@ -151,6 +154,10 @@ class Client
                 ['code' => $authCode]
             );
         } catch (IdentityProviderException $e) {
+            error_log("failed to create access token with auth code: " + $authCode);
+            error_log($e);
+            error_log($this->lastResponseBody);
+            error_log($this->lastResponseHeaders);
             throw new AuthorizationException('Identity provider exception');
         }
     }
@@ -195,6 +202,9 @@ class Client
         );
         $responseBody = $response->getBody()->getContents();
         $this->checkAuthorizationErrors($responseBody);
+
+        $this->lastResponseBody = $responseBody;
+        $this->lastResponseHeaders = $response->getHeaders();
 
         $locationHeader = $response->getHeaders()['Location'][0];
         return $this->parseAuthorizationCodeFromUrl($locationHeader);
