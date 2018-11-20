@@ -154,7 +154,7 @@ class Client
                 ['code' => $authCode]
             );
         } catch (IdentityProviderException $e) {
-            error_log("failed to create access token with auth code: " + $authCode);
+            error_log("failed to create access token with auth code: " . $authCode);
             error_log($e);
             error_log($this->lastResponseBody);
             error_log($this->lastResponseHeaders);
