@@ -10,7 +10,7 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
      */
     function testCreatesSessionForValidCredentials()
     {
-        $credentialsFileName = __DIR__.'/data/client-credentials.json';
+        $credentialsFileName = __DIR__ . '/data/client-credentials.json';
         $credentialsFile = fopen($credentialsFileName, 'r');
         $credentialsJson = fread($credentialsFile, filesize($credentialsFileName));
         $credentials = json_decode($credentialsJson);
@@ -161,7 +161,7 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
 
     function credentialsProvider()
     {
-        $credentialsFileName = __DIR__.'/data/client-credentials.json';
+        $credentialsFileName = __DIR__ . '/data/client-credentials.json';
         $credentialsFile = fopen($credentialsFileName, 'r');
         $credentialsJson = fread($credentialsFile, filesize($credentialsFileName));
         $decodeAsArray = true;
