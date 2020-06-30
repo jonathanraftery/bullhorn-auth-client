@@ -155,10 +155,9 @@ class Client
             );
         } catch (IdentityProviderException $e) {
             error_log("failed to create access token with auth code: " . $authCode);
-            error_log($e);
             error_log("Last response body: " . print_r($this->lastResponseBody, true));
             error_log("Last response headers: " . print_r($this->lastResponseHeaders, true));
-            throw new AuthorizationException('Identity provider exception');
+            throw new AuthorizationException('Identity provider exception', 0, $e);
         }
     }
 
@@ -170,7 +169,7 @@ class Client
                 ['refresh_token' => $refreshToken]
             );
         } catch (IdentityProviderException $e) {
-            throw new Exception\InvalidRefreshTokenException('attempted session refresh with invalid refresh token');
+            throw new Exception\InvalidRefreshTokenException('attempted session refresh with invalid refresh token', 0, $e);
         }
     }
 
