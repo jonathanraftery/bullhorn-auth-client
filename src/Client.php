@@ -28,8 +28,8 @@ class Client
         $this->authProvider = new OAuth2Provider([
             'clientId' => $clientId,
             'clientSecret' => $clientSecret,
-            'urlAuthorize' => self::AUTH_URL,
-            'urlAccessToken' => self::TOKEN_URL,
+            'urlAuthorize' => static::AUTH_URL,
+            'urlAccessToken' => static::TOKEN_URL,
             'urlResourceOwnerDetails' => ''
         ]);
     }
@@ -128,7 +128,7 @@ class Client
         );
         $options['access_token'] = $accessToken;
 
-        $fullUrl = self::LOGIN_URL
+        $fullUrl = static::LOGIN_URL
             . '?' . http_build_query($options);
         $loginRequest = $this->authProvider->getAuthenticatedRequest(
             'GET',
